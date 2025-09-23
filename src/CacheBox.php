@@ -32,13 +32,13 @@ class CacheBox
         $this->cacheDriver->setFormat($type);
         return $this;
     }
-    public function set(string $key, mixed $value, ?int $ttl = null)
+    public function set(string $key, mixed $value, ?string $ttl = null)
     {
         $this->cacheDriver->set($key, $value, $ttl);
     }
-    public function get(string $key)
+    public function get(string $key):mixed
     {
-        $this->cacheDriver->get($key);
+        return $this->cacheDriver->get($key);
     }
     public function delete(string $key)
     {
