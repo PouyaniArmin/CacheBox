@@ -52,21 +52,83 @@ class FileCache extends CacheDriverAbstract
         }
         return $file_path;
     }
-    public function set(string $key, mixed $value, ?int $ttl = null)
+    public function set(string $key, mixed $value, ?string $ttl = null)
     {
         $filePath = $this->createCacheDirectory() . '/' . $key . '.' . $this->format;
         if ($this->format === 'txt') {
-            file_put_contents($filePath, $value);
+            $dataToStore = [
+                'created_at' => time(),
+                'expires_at' => time() + $this->convertTtlToSeconds($ttl),
+                'value' => $value
+            ];
+            file_put_contents($filePath, serialize($dataToStore));
         } elseif ($this->format === 'json') {
-            $data = json_decode($value, true);
-            $response = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
-            file_put_contents($filePath, $response);
+            $valueDecoded = is_string($value) ? json_decode($value, true) : $value;
+            $dataToStore = [
+                'created_at' => time(),
+                'expires_at' => time() + $this->convertTtlToSeconds($ttl),
+                'value' => $valueDecoded
+            ];
+            file_put_contents($filePath, json_encode($dataToStore, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT));
         } elseif ($this->format === 'serialize') {
-            $serialized = serialize($value);
-            file_put_contents($filePath, $serialized);
+
+            $dataToStore = [
+                'created_at' => time(),
+                'expires_at' => time() + $this->convertTtlToSeconds($ttl),
+                'value' => $value
+            ];
+            file_put_contents($filePath, serialize($dataToStore));
         }
     }
-    public function get(string $key) {}
-    public function delete(string $key) {}
-    public function clear() {}
+    public function get(string $key): mixed
+    {
+        $file = $this->createCacheDirectory() . '/' . $key . '.' . $this->format;
+
+        if (!file_exists($file)) {
+            throw new Exception("Error File Not Exists Path: $file");
+        }
+
+        $response = file_get_contents($file);
+
+        if ($this->format === 'txt' || $this->format === 'serialize') {
+            $data = unserialize($response);
+        } elseif ($this->format === 'json') {
+            $data = json_decode($response, true);
+        }
+
+        $expires_at = $data['expires_at'] ?? null;
+        if ($expires_at && time() > $expires_at) {
+            unlink($file);
+            return null;
+        }
+
+        return $data['value'];
+    }
+
+
+    public function delete(string $key)
+    {
+        $file = $this->createCacheDirectory() . '/' . $key . '.' . $this->format;
+        if (!file_exists($file)) {
+            throw new Exception("Error File Not Exists Path: $file");
+        }
+        unlink($file);
+        return null;
+    }
+    public function clear()
+    {
+        $dir = $this->createCacheDirectory();
+        $scan = scandir($dir);
+        $deletedCount = 0;
+        foreach ($scan as $item) {
+            if ($item === '.' || $item === '..') {
+                continue;
+            }
+            if (is_file($dir . "/$item")) {
+                unlink($dir . "/$item");
+                $deletedCount++;
+            }
+        }
+        return $deletedCount;
+    }
 }
