@@ -7,8 +7,11 @@ use Exception;
 class CacheBox
 {
     private $cacheDriver;
-    private array $drivers = ['file' => FileCache::class,
-    'memcached'=>MemcacheDriver::class];
+    private array $drivers = [
+        'file' => FileCache::class,
+        'memcached' => MemcacheDriver::class,
+        'redis' => RedisDriver::class
+    ];
     public function driver(string $type)
     {
         if (!isset($this->drivers[$type])) {
@@ -23,8 +26,9 @@ class CacheBox
         $this->cacheDriver->path($path);
         return $this;
     }
-    public function server(string $host,int $port){
-        $this->cacheDriver->setServer($host,$port);
+    public function server(string $host, int $port)
+    {
+        $this->cacheDriver->setServer($host, $port);
         return $this;
     }
     public function directory(string $directory)
@@ -41,7 +45,7 @@ class CacheBox
     {
         $this->cacheDriver->set($key, $value, $ttl);
     }
-    public function get(string $key):mixed
+    public function get(string $key): mixed
     {
         return $this->cacheDriver->get($key);
     }
