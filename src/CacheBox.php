@@ -7,7 +7,8 @@ use Exception;
 class CacheBox
 {
     private $cacheDriver;
-    private array $drivers = ['file' => FileCache::class];
+    private array $drivers = ['file' => FileCache::class,
+    'memcached'=>MemcacheDriver::class];
     public function driver(string $type)
     {
         if (!isset($this->drivers[$type])) {
@@ -20,6 +21,10 @@ class CacheBox
     public function path(string $path)
     {
         $this->cacheDriver->path($path);
+        return $this;
+    }
+    public function server(string $host,int $port){
+        $this->cacheDriver->setServer($host,$port);
         return $this;
     }
     public function directory(string $directory)
