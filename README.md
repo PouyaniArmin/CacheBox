@@ -43,7 +43,7 @@ use ArminDev\CacheBox\CacheBox;
 ### Using FileCache
 
 ```php
-use Armin\CacheBox\CacheBox;
+use ArminDev\CacheBox\CacheBox;
 
 $cache = new CacheBox();
 $cache->driver('file')
@@ -58,7 +58,7 @@ print_r($data);
 
 ### Using Memcached
 ```php
-use Armin\CacheBox\CacheBox;
+use ArminDev\CacheBox\CacheBox;
 
 $cache = new CacheBox();
 $cache->driver('memcached')
@@ -72,7 +72,7 @@ print_r($data);
 
 ### Using Redis
 ```php
-use Armin\CacheBox\CacheBox;
+use ArminDev\CacheBox\CacheBox;
 
 $cache = new CacheBox();
 $cache->driver('redis')
@@ -94,7 +94,7 @@ CacheBox supports setting expiration times (TTL) for cached items. You can provi
 **Examples:**
 
 ```php
-use Armin\CacheBox\CacheBox;
+use ArminDec\CacheBox\CacheBox;
 
 $cache = new CacheBox();
 $cache->driver('file')
