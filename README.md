@@ -12,6 +12,19 @@ CacheBox is a flexible PHP caching library that allows developers to store and r
   - `memcached` (for MemcacheDriver)
 - File write permissions (for FileCache)
 
+### Installation via Composer
+
+You can install CacheBox using Composer:
+
+```bash
+composer require armin-dev/cache-box
+```
+```php
+require __DIR__ . '/vendor/autoload.php';
+
+use ArminDev\CacheBox\CacheBox;
+
+```
 ## Drivers
 
 ### Memcached
