@@ -1,5 +1,6 @@
 {
     "name": "armin-dev/cache-box",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "ArminDev\\CacheBox\\": "src/"
