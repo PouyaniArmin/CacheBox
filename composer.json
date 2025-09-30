@@ -1,8 +1,8 @@
 {
-    "name": "armin/cache-box",
+    "name": "armin-dev/cache-box",
     "autoload": {
         "psr-4": {
-            "Armin\\CacheBox\\": "src/"
+            "ArminDev\\CacheBox\\": "src/"
         }
     },
     "authors": [

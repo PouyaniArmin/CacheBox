@@ -1,6 +1,6 @@
 <?php
 
-namespace Armin\CacheBox;
+namespace ArminDev\CacheBox;
 
 use Exception;
 use Memcached;
